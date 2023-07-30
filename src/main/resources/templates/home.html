@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+		<!-- Required meta tags -->
+    	<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Bootstrap CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		
+		<title>Demo App Server Send Event - SSE</title>				
+	</head>
+	<body>
+		<div class="m-4">
+    		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        		<div class="container-fluid">		
+		
+					<div class="btn-toolbar mb-3" role="toolbar" aria-label="Main Toolbar">
+						<div class="btn-group me-2" role="group" aria-label="First group">
+							<button type="button" class="btn btn-outline-secondary" id="newTaskButton">New Task</button>
+						</div>
+						<div class="input-group">
+							<div class="input-group-text" id="btnGroupAddon">End Task</div>
+							<input type="text" class="form-control" placeholder="Task UUID" aria-label="Input group example" aria-describedby="btnGroupAddon" id="completeTaskTextInput">
+							<button type="button" class="btn btn-outline-secondary" id="completeTaskButton">></button>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="m-4">
+			<div class="table-responsive"> 
+		        <table class="table" id="taskTable">
+		            <thead>
+		                <tr>
+		                    <th style="width: 20%">#</th>
+		                    <th style="width: 5%">Status</th>
+		                    <th style="width: 75%">Data</th>		                    
+		                </tr>
+		            </thead>
+		            <tbody>
+		            	 <tr th:each="task : ${tasklist}" th:id="${task.taskId}">
+		            	 	<td th:text="${task.taskId}"></td>
+		            	 	<td th:text="${task.taskStatus}"></td>
+		            	 	<td>
+		            	 		<span th:text="${task.payload}"></span>
+		            	 		<div th:if="${task.taskStatus.value == T(com.bosch.btmpt.SSEDemo.TaskStatus).ACTIVE.value}" class="spinner-border spinner-border-sm text-success" role="status">
+			  						<span class="visually-hidden">Processing...</span>
+								</div>	
+		            	 	</td>
+		            	 </tr>
+		            </tbody>
+		       	</table>
+		    </div>
+		</div>
+		
+		<template id="tableRowTemplate">
+  			<tr id="">
+  				<td></td>
+  				<td></td>
+  				<td><span></span></td>
+  			</tr>
+		</template>
+			
+		<template id="activeTaskTemplate">
+			<div class="spinner-border spinner-border-sm text-success" role="status">
+  				<span class="visually-hidden">Processing...</span>
+			</div>
+		</template>
+		
+		<div class="modal" tabindex="-1" id="taskModalDialog">
+			<div class="modal-dialog">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<h5 class="modal-title">My Simple Task</h5>		        		
+		      		</div>
+		      		<div class="modal-body" id="taskModalDialogBody">
+		        		<p>Calling create task API.</p>
+		      		</div>
+		      		<div class="modal-footer">		    
+		      			<span class="spinner-grow spinner-grow-sm active-task-element" role="status" aria-hidden="true"></span>
+		      			<button type="button" class="btn btn-secondary d-none completed-task-element" data-bs-dismiss="modal">Close</button>    		
+		        		<button type="button" class="btn btn-primary active-task-element" data-bs-dismiss="modal">Run in background</button>		        		
+		      		</div>
+		    	</div>
+		  	</div>
+		</div>		
+		
+		<!-- Bootstrap Bundle with Popper -->
+    	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    	<script src="js/app.js"></script>
+	</body>
+</html>
