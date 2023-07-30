@@ -1,10 +1,15 @@
 pipeline {
     agent {
-        docker {
-            image 'maven:3.9.3-eclipse-temurin-17' 
-            args '-v /root/.m2:/root/.m2' 
-        }
-    }
+		kubernetes {
+		  inheritFrom 'mypod'
+		  yaml '''
+		  spec:
+			containers:
+			- name: maven
+			  image: maven:3.8.1-jdk-11
+			'''		  
+		}
+	}		  
     stages {
         stage('Build') { 
             steps {
